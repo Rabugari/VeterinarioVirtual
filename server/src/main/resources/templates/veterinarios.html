@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Index</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div th:if="${success != null}" th:text="${success}"></div>
+	<div th:if="${error != null}" th:text="${error}"></div>
+
+
+	<ul class="nav nav-pills">
+		<li role="presentation"><a href="/">Home</a></li>
+		<li role="presentation"><a href="animal">Animais</a></li>
+		<li role="presentation"><a href="vacina">Vacinas</a></li>
+		<li role="presentation" class="active"><a href="veterinary">Veterinarios</a></li>
+		<li role="presentation"><a href="agendar_vacina">Agenda de Vacina</a></li>
+		<li role="presentation"><a href="agendar_veterinario">Agendar Consulta</a></li>
+	</ul>
+
+	<div id="lista">
+		<h1>Veterinarios cadastrados</h1>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Excluir</th>
+				</tr>
+			</thead>
+			<tr th:each="veterinary : ${veterinaries}">
+				<td><span th:text="${veterinary.name}"></span></td>
+				<td><a
+					th:href="${(#mvc.url('VC#removeVeterinary').arg(0, veterinary.id)).build()}">
+						<i>Excluir</i>
+				</a></td>
+			</tr>
+		</table>
+	</div>
+
+	<hr />
+
+	<form th:action="${(#mvc.url('VC#saveVeterinary')).build()}" th:object="${veterinary}"  method="post">
+		<fieldset name="Nova Veterinário">
+			<div class="form-group">
+				<label for="nome">Nome do Veterinário</label> <input type="text"
+					class="form-control" th:field="*{name}" id="nome" placeholder="Nome" />
+			</div>
+			<button type="submit" class="btn btn-success">Salvar</button>
+		</fieldset>
+	</form>
+</body>
+</html>

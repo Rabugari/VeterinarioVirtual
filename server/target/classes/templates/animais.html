@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Index</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div th:if="${success != null}" th:text="${success}"></div>
+	<div th:if="${error != null}" th:text="${error}"></div>
+
+	<ul class="nav nav-pills">
+		<li role="presentation"><a href="/">Home</a></li>
+		<li role="presentation" class="active"><a href="animal">Animais</a></li>
+		<li role="presentation"><a href="vacina">Vacinas</a></li>
+		<li role="presentation"><a href="veterinario">Veterinarios</a></li>
+		<li role="presentation"><a href="agendar_vacina">Agenda de Vacina</a></li>
+		<li role="presentation"><a href="agendar_veterinario">Agendar Consulta</a></li>
+	</ul>
+
+	<div id="lista">
+		<h1>Lista de Animais cadastrados</h1>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Nome do Animal</th>
+					<th>Dono</th>
+					<th>E-mail</th>
+					<th>Espécie</th>
+					<th>Excluir</th>
+				</tr>
+			</thead>
+			<tr th:each="animal : ${animals}">
+				<td><span th:text="${animal.name}"></span></td>
+				<td><span th:text="${animal.owner.name}"></span></td>
+				<td><span th:text="${animal.owner.email}"></span></td>
+				<td><span th:text="${animal.specie}"></span></td>
+				<td><a
+					th:href="${(#mvc.url('AC#removeAnimal').arg(0, animal.id)).build()}">
+						<i>Excluir</i>
+				</a></td>
+			</tr>
+		</table>
+	</div>
+
+	<hr />
+
+	<form th:action="${(#mvc.url('AC#saveAnimal')).build()}" th:object="${animal}"  method="post">
+		<fieldset name="Novo Animal">
+			<div class="form-group">
+				<label for="nome">Nome do animal</label> <input type="text"
+					class="form-control" th:field="*{name}"  id="nome" placeholder="Nome do Animal" />
+			</div>
+
+			<div class="form-group">
+				<label for="dono">Dono</label> <input type="text"
+					class="form-control" th:field="*{owner.name}" id="dono" placeholder="Cliente" />
+			</div>
+
+			<div class="form-group">
+				<label for="email">E-mail</label> <input type="text"
+					class="form-control" th:field="${animal.owner.email}" id="email" placeholder="E-mail" />
+			</div>
+
+			<div class="form-group">
+				<label for="level">Espécie</label> <input type="text"
+					class="form-control" th:field="${animal.specie}" id="especie"
+					placeholder="especie" />
+			</div>
+
+			<button type="submit" class="btn btn-success">Salvar</button>
+		</fieldset>
+	</form>
+
+</body>
+</html>

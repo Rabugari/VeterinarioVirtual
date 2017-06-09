@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Index</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div th:if="${success != null}" th:text="${success}"></div>
+	<div th:if="${error != null}" th:text="${error}"></div>
+
+	<ul class="nav nav-pills">
+		<li role="presentation"><a href="/">Home</a></li>
+		<li role="presentation"><a href="animal">Animais</a></li>
+		<li role="presentation"><a href="vacina">Vacinas</a></li>
+		<li role="presentation"><a href="veterinario">Veterinarios</a></li>
+		<li role="presentation"><a href="agendar_vacina">Agenda de Vacina</a></li>
+		<li role="presentation"  class="active"><a href="agendar_veterinario">Agendar Consulta</a></li>
+	</ul>
+
+	<div id="lista">
+		<h1>Agenda de Vacinas</h1>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Animal</th>
+					<th>Dono</th>
+					<th>Veterinario</th>
+					<th>Dia</th>
+					<th>Excluir</th>
+				</tr>
+			</thead>
+			<tr th:each="consulta : ${agendaConsultas}">
+				<td><span th:text="${consulta.animal.name}"></span></td>
+				<td><span th:text="${consulta.animal.owner.name}"></span></td>
+				<td><span th:text="${consulta.veterinary.name}"></span></td>
+				<td><span th:text="${consulta.scheduleDate}"></span></td>
+				<td><a
+					th:href="${(#mvc.url('SVC#removeVeterinarySchedule').arg(0, consulta.id)).build()}">
+						<i>Excluir</i>
+				</a></td>
+			</tr>
+		</table>
+	</div>
+
+	<hr />
+
+	<form th:action="${(#mvc.url('SVC#saveVeterinarySchedule')).build()}"
+		 th:object="${veterinarySchedule}" method="POST">
+		<fieldset name="Novo registro">
+			<div class="form-group">
+				<label>Selecione um animal</label> <select id="animal" name="animal">
+					<option value="" disabled="disabled" selected="selected">Selecione
+						um animal</option>
+					<option th:each="animal : ${animals}" th:value="${animal.id}"
+						th:text="${animal.name}"></option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label>Selecione um Veterinario</label> <select id="veterinary" name="veterinary">
+					<option value="" disabled="disabled" selected="selected">Selecione um Veterinario</option>
+					<option th:each="veterinary : ${veterinaries}" th:value="${veterinary.id}"
+						th:text="${veterinary.name}"></option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="dtschedule">Data de consulta</label>
+                <div class='input-group date' id='datetimepicker'>
+                    <input id="dtschedule" type='text' th:field="*{scheduleDate}"  class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+			<button type="submit" class="btn btn-success">Agendar</button>
+		</fieldset>
+	</form>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+	$(function () {
+        $('#datetimepicker').datepicker({
+        	format: 'dd-mm-yyyy hh:ii'
+        });
+    });
+	</script>
+
+</body>
+</html>
